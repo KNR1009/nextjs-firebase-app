@@ -3,15 +3,15 @@ import { useEffect } from "react";
 import { atom, useRecoilState } from "recoil";
 // import { User } from "../models/User";
 
-const userState = atom<User>({
-  key: "user",
-  default: null,
-});
-
 type User = {
   uid: string;
   isAnonymous: boolean;
 };
+
+const userState = atom<User>({
+  key: "user",
+  default: null,
+});
 
 export function useAuthentication() {
   const [user, setUser] = useRecoilState<User>(userState);
@@ -33,11 +33,13 @@ export function useAuthentication() {
 
     firebase.auth().onAuthStateChanged(function (firebaseUser) {
       if (firebaseUser) {
-        console.log("aaa");
-        setUser({
+        const loginUser = {
           uid: firebaseUser.uid,
           isAnonymous: firebaseUser.isAnonymous,
-        });
+        };
+        setUser(loginUser);
+
+        createUserIfNotFound(loginUser);
       } else {
         // User is signed out.
         setUser(null);
@@ -47,3 +49,17 @@ export function useAuthentication() {
 
   return { user };
 }
+
+export const createUserIfNotFound = async (user: User) => {
+  const userRef = firebase.firestore().collection("user").doc(user.uid);
+
+  const doc = await userRef.get();
+
+  if (doc.exists) {
+    return;
+  }
+
+  await userRef.set({
+    name: "taro" + new Date().getTime(),
+  });
+};

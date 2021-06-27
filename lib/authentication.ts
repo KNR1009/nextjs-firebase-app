@@ -12,7 +12,6 @@ function authenticate() {
       // ...
     });
 
-
   firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
       console.log(user.toJSON());
@@ -21,7 +20,7 @@ function authenticate() {
     } else {
       // User is signed out.
       // ...
-      console.log("ログインしていません")
+      console.log("ログインしていません");
     }
     // ...
   });
