@@ -6,8 +6,8 @@ export default function Home() {
   return (
     <>
       <div>{user?.uid}</div>
-      <Link href="/page2">
-        <a>Go to page2</a>
+      <Link href={`users/${user?.uid}`}>
+        <a>ユーザー詳細ページへ</a>
       </Link>
     </>
   );

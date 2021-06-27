@@ -1,13 +1,12 @@
 import "../styles/globals.css";
 import "../lib/firebase";
 import "../lib/authentication";
-import { RecoilRoot } from 'recoil'
-
+import { RecoilRoot } from "recoil";
 
 function MyApp({ Component, pageProps }) {
-  return(
+  return (
     <RecoilRoot>
-       <Component {...pageProps} />
+      <Component {...pageProps} />
     </RecoilRoot>
   );
 }

@@ -1,12 +1,7 @@
 import firebase from "firebase/app";
 import { useEffect } from "react";
 import { atom, useRecoilState } from "recoil";
-// import { User } from "../models/User";
-
-type User = {
-  uid: string;
-  isAnonymous: boolean;
-};
+import { User } from "../models/User";
 
 const userState = atom<User>({
   key: "user",
@@ -36,6 +31,7 @@ export function useAuthentication() {
         const loginUser = {
           uid: firebaseUser.uid,
           isAnonymous: firebaseUser.isAnonymous,
+          name: "",
         };
         setUser(loginUser);
 
