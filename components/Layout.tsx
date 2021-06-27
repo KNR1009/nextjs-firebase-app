@@ -1,4 +1,5 @@
 import React from "react";
+import { ToastContainer } from "react-toastify";
 
 const Layout = ({ children }) => {
   return (
@@ -20,6 +21,7 @@ const Layout = ({ children }) => {
           </form>
         </div>
       </nav>
+      <ToastContainer />
       <div className="container">{children}</div>
     </div>
   );
