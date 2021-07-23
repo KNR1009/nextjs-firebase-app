@@ -59,7 +59,7 @@ const QuestionReceived = () => {
                   </small>
                 </div>
 
-                <Link href={`${question.id}`}>
+                <Link href={`${question.id}`} key={question.id}>
                   <a>質問詳細ページへ</a>
                 </Link>
               </div>
