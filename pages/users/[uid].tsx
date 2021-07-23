@@ -34,23 +34,23 @@ const UserShow = () => {
       }
 
       const data = doc.data() as User;
+      // dataの中にuidのオブジェクトを追加して、stateを更新関数で更新
       data.uid = doc.id;
-
       setUser(data);
     };
     loadUser();
   }, [query.uid]);
 
   // firebaseへ質問を登録
-  async function onSubmit(e: FormEvent<HTMLFormElement>) {
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
+    // ローディング処理の値
     setIsSending(true);
 
     await firebase.firestore().collection("questions").add({
       senderUid: firebase.auth().currentUser.uid,
       receiverUid: user.uid,
-      body,
+      body: body,
       isReplied: false,
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
     });
@@ -58,6 +58,8 @@ const UserShow = () => {
     setIsSending(false);
 
     setBody("");
+
+    // 送信完了時にフラッシュが出てくるようにする
     toast.success("質問を送信しました。", {
       position: "bottom-left",
       autoClose: 5000,
@@ -67,7 +69,7 @@ const UserShow = () => {
       draggable: true,
       progress: undefined,
     });
-  }
+  };
 
   return (
     <Layout>
@@ -93,7 +95,7 @@ const UserShow = () => {
               ></textarea>
               <div className="m-3">
                 {isSending ? (
-                  <p>送信中</p>
+                  <p>送信中です</p>
                 ) : (
                   <button type="submit" className="btn btn-primary">
                     質問を送信する

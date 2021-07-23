@@ -7,7 +7,7 @@ export default function Home() {
   const { user } = useAuthentication();
   return (
     <Layout>
-      <div>{user?.uid}</div>
+      <div>{user?.uid || "未ログイン"}</div>
       <Link href={`users/${user?.uid}`}>
         <a>ユーザー詳細ページへ</a>
       </Link>

@@ -8,7 +8,7 @@ const userState = atom<User>({
   default: null,
 });
 
-export function useAuthentication() {
+export const useAuthentication = () => {
   const [user, setUser] = useRecoilState<User>(userState);
 
   useEffect(() => {
@@ -18,6 +18,7 @@ export function useAuthentication() {
       return;
     }
 
+    // 自動認証
     firebase
       .auth()
       .signInAnonymously()
@@ -26,6 +27,7 @@ export function useAuthentication() {
         console.error(error);
       });
 
+    // 引数でブラウザに振られたユーザー情報を取得
     firebase.auth().onAuthStateChanged(function (firebaseUser) {
       if (firebaseUser) {
         const loginUser = {
@@ -35,6 +37,7 @@ export function useAuthentication() {
         };
         setUser(loginUser);
 
+        // ログインユーザー情報をfirebaseへ格納
         createUserIfNotFound(loginUser);
       } else {
         // User is signed out.
@@ -44,17 +47,20 @@ export function useAuthentication() {
   }, []);
 
   return { user };
-}
+};
 
+// firebase側に値を保存
 export const createUserIfNotFound = async (user: User) => {
   const userRef = firebase.firestore().collection("user").doc(user.uid);
 
   const doc = await userRef.get();
 
+  // データがない場合はそのまま処理を終わらせる
   if (doc.exists) {
     return;
   }
 
+  // フィールドの中に名前を追加する
   await userRef.set({
     name: "taro" + new Date().getTime(),
   });
