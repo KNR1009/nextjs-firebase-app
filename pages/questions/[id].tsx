@@ -1,38 +1,42 @@
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import React, { SetStateAction, useEffect, useState } from "react";
 import firebase from "firebase/app";
-import { useAuthentication } from "../../hoks/authentication";
-import { Question } from "../../models/Question";
 import Layout from "../../components/Layout";
+import { Question } from "../../models/Question";
+import { useAuthentication } from "../../hoks/authentication";
 
-const UserQuestionSHow = () => {
+type Query = {
+  id: string;
+};
+
+export default function QuestionsShow() {
   const router = useRouter();
+  const query = router.query as Query;
   const { user } = useAuthentication();
-  const [question, setQuestion] = useState<Question>();
+  const [question, setQuestion] = useState<Question>(null);
 
-  const query = typeof router.query.id == "string" ? router.query.id : null;
+  const loadData = async () => {
+    if (query.id === undefined) {
+      return;
+    }
+
+    const questionDoc = await firebase
+      .firestore()
+      .collection("questions")
+      .doc(query.id)
+      .get();
+    if (!questionDoc.exists) {
+      return;
+    }
+
+    const gotQuestion = questionDoc.data() as Question;
+    gotQuestion.id = questionDoc.id;
+    setQuestion(gotQuestion);
+  };
 
   useEffect(() => {
-    if (!process.browser) {
-      return;
-    }
-    if (user === null) {
-      return;
-    }
-
-    const getQuestion = async () => {
-      const doc = await firebase
-        .firestore()
-        .collection("questions")
-        .doc(query)
-        .get();
-
-      const data = (await doc.data()) as SetStateAction<Question>;
-      setQuestion(data);
-    };
-    getQuestion();
-    console.log(question);
-  }, [router.query.id]);
+    loadData();
+  }, [query.id]);
 
   return (
     <Layout>
@@ -47,6 +51,4 @@ const UserQuestionSHow = () => {
       </div>
     </Layout>
   );
-};
-
-export default UserQuestionSHow;
+}
