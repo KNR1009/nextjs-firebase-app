@@ -14,7 +14,6 @@ export const useAuthentication = () => {
   useEffect(() => {
     //  ログイン状態だった場合はフックをfirebaseへの認証処理を発火させない
     if (user !== null) {
-      console.log("ログイン済み");
       return;
     }
 
@@ -24,7 +23,6 @@ export const useAuthentication = () => {
       .signInAnonymously()
       .catch(function (error) {
         // Handle Errors here.
-        console.error(error);
       });
 
     // 引数でブラウザに振られたユーザー情報を取得

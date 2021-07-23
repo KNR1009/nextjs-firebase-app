@@ -4,6 +4,7 @@ import Layout from "../../components/Layout";
 import { Question } from "../../models/Question";
 import { useAuthentication } from "../../hoks/authentication";
 import dayjs from "dayjs";
+import Link from "next/link";
 
 const QuestionReceived = () => {
   const { user } = useAuthentication();
@@ -57,6 +58,10 @@ const QuestionReceived = () => {
                     )}
                   </small>
                 </div>
+
+                <Link href={`${question.id}`}>
+                  <a>質問詳細ページへ</a>
+                </Link>
               </div>
             </div>
           ))}
